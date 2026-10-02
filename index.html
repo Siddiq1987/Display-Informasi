@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Informasi Sekolah</title>
+    <link rel="icon" href="https://pngup.com/K1Vd/ndik ya.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            user-select: none;
+            background: linear-gradient(135deg, #020617 0%, #082f49 50%, #0369a1 100%);
+        }
+        .ambient-bg {
+            background: radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.35), transparent 45%),
+                        radial-gradient(circle at 85% 85%, rgba(14, 165, 233, 0.3), transparent 45%),
+                        radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.25), transparent 55%),
+                        linear-gradient(135deg, #020617 0%, #0c4a6e 50%, #0284c7 100%);
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 55s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(3, 105, 161, 0.2);
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #38bdf8, #0284c7);
+            border-radius: 9999px;
+        }
+        .glass-panel {
+            background: rgba(8, 47, 73, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 20px 40px rgba(2, 6, 23, 0.5);
+        }
+        .glass-card {
+            background: rgba(12, 74, 110, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+    </style>
+</head>
+<body class="text-white h-screen w-screen flex flex-col justify-between relative ambient-bg">
+
+    <div id="startupOverlay" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-2xl flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl p-8 max-w-lg w-full shadow-2xl shadow-sky-500/30 text-center space-y-6 relative overflow-hidden border border-sky-400/30">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-sky-400/30 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-600/30 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="w-40 h-40 bg-tranparant from-sky-400 via-blue-600 to-indigo-600 text-white rounded-2xl mx-auto flex items-center justify-center text-3xl">
+                <img id="headerLogo" src="https://pngup.com/EnhF/SMP IT TRI SUKSES (400px).png" alt="Logo Sekolah" class="w-40 h-40 object-contain" onerror="this.src='https://placehold.co/100x100/0284c7/ffffff?text=Logo'">
+            </div>
+            <div>
+                <h1 class="text-2xl font-black text-white mb-1 tracking-tight">TV Display Informasi Sekolah</h1>
+                <h1 id="headerSchoolName" class="text-xl md:text-xl font-black tracking-tight text-white bg-gradient-to-r from-sky-300 via-blue-200 to-cyan-300 bg-clip-text text-transparent">SMP ISLAM TERPADU TRI SUKSES</h1>
+            </div>
+            <div class="glass-card p-5 rounded-2xl text-left space-y-3.5 border border-sky-400/20">
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" id="startAudioToggle" class="w-5 h-5 accent-sky-400 rounded bg-slate-950 border-sky-700">
+                    <span class="text-sm font-semibold text-sky-100">Aktifkan Suara Video saat Diputar</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" id="startFullscreenToggle" checked class="w-5 h-5 accent-sky-400 rounded bg-slate-950 border-sky-700">
+                    <span class="text-sm font-semibold text-sky-100">Masuk ke Mode Layar Penuh (Fullscreen)</span>
+                </label>
+            </div>
+            <button onclick="initDisplaySystem()" class="w-full py-4 bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-600 hover:from-sky-300 hover:to-indigo-500 text-slate-950 hover:text-white font-black rounded-2xl shadow-xl shadow-sky-500/30 transition flex items-center justify-center gap-2 border border-white/30 text-base tracking-wide">
+                <i class="fa-solid fa-play"></i> Mulai Mode TV Display
+            </button>
+            <p class="text-xs md:text-sm text-sky-200 font-bold">By Ash Siddiq ST</p>
+        </div>
+    </div>
+
+    <header class="glass-panel border-b border-sky-400/25 px-6 py-4 flex items-center justify-between shrink-0 z-20 shadow-xl">
+        <div class="flex items-center gap-4">
+            <img id="headerLogo" src="https://pngup.com/EnhF/SMP IT TRI SUKSES (400px).png" alt="Logo Sekolah" class="w-20 h-20 object-contain" onerror="this.src='https://placehold.co/100x100/0284c7/ffffff?text=Logo'">
+            <div>
+                <h1 id="headerSchoolName" class="text-xl md:text-2xl font-black tracking-tight text-white bg-gradient-to-r from-sky-300 via-blue-200 to-cyan-300 bg-clip-text text-transparent">SMP ISLAM TERPADU TRI SUKSES</h1>
+                <p id="headerSchoolAddress" class="text-xs md:text-xl text-white font-semibold">Jalan Raya Kalimulya No.36 Kel.Kalimulya Kec.Cilodong Kota Depok</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-6">
+            <div class="text-center">
+                <div id="liveDate" class="text-sm md:text-lg lg:text-xl font-bold text-white bg-clip-text bg-gradient-to-r from-sky-300 via-cyan-300 to-white">Kamis, 1 Oktober 2026</div>
+                <div id="liveClock" class="text-2xl md:text-4xl font-black text-white tracking-widest drop-shadow-md">00:00:00</div>
+            </div>
+            <button onclick="openSettingsModal()" class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white flex items-center justify-center border border-sky-300/40 shadow-lg shadow-sky-500/30 transition hover:scale-105" title="Buka Pengaturan">
+                <i class="fa-solid fa-gear text-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 grid grid-cols-12 gap-5 p-5 overflow-hidden relative">
+        <section class="col-span-12 lg:col-span-7 glass-panel rounded-3xl overflow-hidden flex flex-col relative shadow-2xl border border-sky-400/30">
+            <div id="mediaViewer" class="flex-1 relative w-full h-full bg-slate-950 flex items-center justify-center overflow-hidden">
+                <!-- Dynamically injected media -->
+            </div>
+            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950 via-slate-950/85 to-transparent p-5 pt-12 flex flex-col gap-2.5 z-10 pointer-events-none">
+                <div class="flex items-center justify-between text-xs font-bold text-slate-200">
+                    <span id="mediaCategoryBadge" class="px-4 py-1.5 bg-gradient-to-r from-sky-500 to-blue-600 border border-sky-400/50 text-white rounded-full shadow-lg">Dokumentasi</span>
+                    <span id="mediaTimer" class="font-mono bg-sky-950/90 px-3.5 py-1 rounded-full border border-sky-400/30 text-sky-300 hidden">0s / 0s</span>
+                </div>
+                <h3 id="mediaTitleText" class="text-xl font-black text-white tracking-tight truncate drop-shadow">Kegiatan Sekolah</h3>
+                <div class="w-full h-2.5 bg-sky-950/90 rounded-full overflow-hidden p-0.5 border border-sky-400/30 shadow-inner">
+                    <div id="mediaProgressBar" class="h-full bg-gradient-to-r from-sky-400 via-blue-500 to-cyan-400 rounded-full transition-all duration-300 w-0 shadow-lg shadow-sky-500/50"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="col-span-12 lg:col-span-5 flex flex-col gap-5 overflow-hidden">
+            <div class="flex-1 glass-panel rounded-3xl p-6 flex flex-col shadow-2xl overflow-hidden border border-sky-400/30">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-sky-400/25">
+                    <h2 class="text-base font-extrabold text-white flex items-center gap-2.5">
+                        <span class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-sky-400 to-blue-600 text-white flex items-center justify-center border border-sky-300/40 shadow-md">
+                            <i class="fa-solid fa-calendar-days"></i>
+                        </span>
+                        Agenda Kegiatan Sekolah
+                    </h2>
+                    <span class="text-xs px-3.5 py-1 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold border border-sky-400/30 shadow-md">Bulan Ini</span>
+                </div>
+                <div id="agendaList" class="flex-1 overflow-y-auto space-y-3.5 pr-1 custom-scroll">
+                    <!-- Agenda items -->
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-sky-950/90 via-blue-900/90 to-cyan-950/90 border border-sky-400/40 rounded-3xl p-6 flex items-center gap-5 shadow-2xl shrink-0 backdrop-blur-xl">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-400 via-blue-500 to-cyan-400 text-slate-950 flex items-center justify-center text-2xl shrink-0 border border-white/40 shadow-xl shadow-sky-500/40">
+                    <i class="fa-solid fa-bullhorn animate-bounce"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs uppercase font-extrabold text-sky-300 tracking-wider mb-1">Himbauan / Informasi Penting</h4>
+                    <p id="dailyTipText" class="text-sm md:text-base text-sky-100 font-bold leading-snug">Budayakan 5S (Senyum, Sapa, Salam, Sopan, Santun) di lingkungan sekolah.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="glass-panel border-t border-sky-400/25 py-3.5 px-6 flex items-center gap-4 shrink-0 z-20 shadow-2xl">
+        <div class="bg-gradient-to-r from-sky-500 via-blue-600 to-cyan-500 text-slate-950 text-xs font-black px-4 py-2 rounded-2xl uppercase tracking-wider flex items-center gap-2 shrink-0 shadow-lg shadow-sky-500/30 border border-white/30">
+            <i class="fa-solid fa-circle-exclamation animate-pulse"></i> Info Penting
+        </div>
+        <div class="overflow-hidden relative flex-1">
+            <div id="marqueeText" class="animate-marquee text-2xl font-bold text-sky-200">
+                Selamat datang di portal informasi resmi SMP Islam Terpadu Tri Sukses.
+            </div>
+        </div>
+    </footer>
+
+    <div id="settingsModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-xl hidden flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-sky-400/30">
+            <div class="p-5 bg-slate-950/80 border-b border-sky-400/25 flex items-center justify-between">
+                <h3 class="text-lg font-black text-white flex items-center gap-2.5">
+                    <span class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-sky-400 to-blue-600 text-white flex items-center justify-center border border-sky-300/30">
+                        <i class="fa-solid fa-sliders"></i>
+                    </span>
+                    Panel Pengaturan TV Display
+                </h3>
+                <button onclick="closeSettingsModal()" class="w-9 h-9 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition border border-sky-400/30">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="flex border-b border-sky-400/25 bg-slate-950/50 px-6 gap-2">
+                <button onclick="switchTab('tabIdentitas')" id="btnTabIdentitas" class="py-3 px-4 text-xs font-bold text-sky-400 border-b-2 border-sky-400 transition">Identitas Sekolah</button>
+                <button onclick="switchTab('tabAgenda')" id="btnTabAgenda" class="py-3 px-4 text-xs font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition">Agenda Kegiatan</button>
+                <button onclick="switchTab('tabMedia')" id="btnTabMedia" class="py-3 px-4 text-xs font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition">Foto/Video Slider</button>
+                <button onclick="switchTab('tabInfo')" id="btnTabInfo" class="py-3 px-4 text-xs font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition">Running Text</button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6 flex-1 text-sm text-slate-200 custom-scroll">
+                <div id="tabIdentitas" class="tab-content space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase font-extrabold text-sky-300 mb-1.5">Nama Sekolah</label>
+                        <input type="text" id="inputSchoolName" class="w-full bg-slate-950/90 border border-sky-400/30 rounded-2xl px-4 py-3 text-white font-medium focus:outline-none focus:border-sky-400 shadow-inner">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-extrabold text-sky-300 mb-1.5">Alamat Sekolah</label>
+                        <input type="text" id="inputSchoolAddress" class="w-full bg-slate-950/90 border border-sky-400/30 rounded-2xl px-4 py-3 text-white font-medium focus:outline-none focus:border-sky-400 shadow-inner">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-extrabold text-sky-300 mb-1.5">URL Logo Sekolah</label>
+                        <input type="text" id="inputSchoolLogo" class="w-full bg-slate-950/90 border border-sky-400/30 rounded-2xl px-4 py-3 text-white font-medium focus:outline-none focus:border-sky-400 shadow-inner">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-extrabold text-sky-300 mb-1.5">Pesan Himbauan Singkat</label>
+                        <input type="text" id="inputDailyTip" class="w-full bg-slate-950/90 border border-sky-400/30 rounded-2xl px-4 py-3 text-white font-medium focus:outline-none focus:border-sky-400 shadow-inner">
+                    </div>
+                </div>
+
+                <div id="tabAgenda" class="tab-content hidden space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs uppercase font-extrabold text-sky-300">Daftar Agenda Kegiatan</span>
+                        <button onclick="addAgendaItem()" class="px-4 py-2 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-400/40 hover:bg-sky-500/30 text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+                            <i class="fa-solid fa-plus"></i> Tambah Agenda
+                        </button>
+                    </div>
+                    <div id="agendaEditContainer" class="space-y-3"></div>
+                </div>
+
+                <div id="tabMedia" class="tab-content hidden space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs uppercase font-extrabold text-sky-300">Daftar Slide Foto & Video</span>
+                        <button onclick="addMediaItem()" class="px-4 py-2 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-400/40 hover:bg-sky-500/30 text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+                            <i class="fa-solid fa-plus"></i> Tambah Media
+                        </button>
+                    </div>
+                    <div id="mediaEditContainer" class="space-y-4"></div>
+                </div>
+
+                <div id="tabInfo" class="tab-content hidden space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase font-extrabold text-sky-300 mb-1.5">Teks Berjalan (Running Text)</label>
+                        <textarea id="inputMarquee" rows="4" class="w-full bg-slate-950/90 border border-sky-400/30 rounded-2xl px-4 py-3 text-white font-medium focus:outline-none focus:border-sky-400 shadow-inner"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 bg-slate-950/95 border-t border-sky-400/25 flex justify-between items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <button onclick="exportJSON()" class="px-4 py-2.5 rounded-xl bg-sky-600/20 hover:bg-sky-600/30 text-sky-300 border border-sky-400/30 font-bold text-xs transition flex items-center gap-1.5 shadow-md" title="Unduh data konfigurasi ke file JSON">
+                        <i class="fa-solid fa-download"></i> Ekspor JSON
+                    </button>
+                    <button onclick="document.getElementById('jsonFileInput').click()" class="px-4 py-2.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-400/30 font-bold text-xs transition flex items-center gap-1.5 shadow-md" title="Muat data konfigurasi dari file JSON">
+                        <i class="fa-solid fa-upload"></i> Impor JSON
+                    </button>
+                    <input type="file" id="jsonFileInput" accept=".json" class="hidden" onchange="importJSON(event)">
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="closeSettingsModal()" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs transition border border-sky-400/30">Batal</button>
+                    <button onclick="saveSettings()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-600 hover:from-sky-300 hover:to-indigo-500 text-slate-950 hover:text-white font-black text-xs shadow-xl shadow-sky-500/30 transition flex items-center gap-2 border border-white/30">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const STORAGE_KEY = 'tv_display_smpit_tri_sukses_blue_v10';
+
+        let state = {
+            school: {
+                name: "SMP ISLAM TERPADU TRI SUKSES",
+                address: "Jalan Raya Kalimulya No.36 Kel.Kalimulya Kec.Cilodong Kota Depok",
+                logo: "https://pngup.com/EnhF/SMP IT TRI SUKSES (400px).png",
+                dailyTip: "Budayakan 5S (Senyum, Sapa, Salam, Sopan, Santun) di lingkungan sekolah."
+            },
+            agendas: [
+                { date: "05 Okt 2026", title: "Upacara Hari Senin & Penyematan Atribut", category: "Upacara" },
+                { date: "12 Okt 2026", title: "Ujian Tengah Semester (UTS) Ganjil Dimulai", category: "Akademik" },
+                { date: "20 Okt 2026", title: "Pelatihan Literasi Digital Siswa", category: "Workshop" },
+                { date: "28 Okt 2026", title: "Peringatan Hari Sumpah Pemuda", category: "Nasional" }
+            ],
+            media: [
+                {
+                    type: "image",
+                    url: "https://i.ibb.co.com/F4gDSJpF/damkar.jpg",
+                    title: "Edukasi Pemadam Kebakaran",
+                    category: "Dokumentasi Pramuka",
+                    duration: 10
+                },
+                {
+                    type: "video",
+                    url: "https://smpittrisuksesdepok.sch.id/wp-content/uploads/2026/10/PROFIL-SMP-IT-TRI-SUKSES-TAHUN-2026.mp4",
+                    title: "Video Profil SMP Islam Terpadu Tri Sukses",
+                    category: "Video Profil Sekolah",
+                    duration: 238
+                },
+                {
+                    type: "image",
+                    url: "https://www.pasteboard.co/C22UlZ1vGAmI.jpg",
+                    title: "Hari Pramuka Ke-65 Tahun 2026",
+                    category: "Dokumentasi Pramuka",
+                    duration: 10
+                }
+            ],
+            marquee: "Selamat datang di portal informasi resmi SMP Islam Terpadu Tri Sukses. Mari wujudkan generasi yang cerdas, berkarakter, dan berprestasi!"
+        };
+
+        let currentMediaIndex = 0;
+        let mediaTimerInterval = null;
+        let secondsElapsed = 0;
+        let globalAudioEnabled = false;
+
+        let db = null;
+        let auth = null;
+        let userId = null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'tv-display-smpit-tri-sukses';
+
+        async function initFirebaseAndLoad() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && parsed.school && parsed.agendas && parsed.media) {
+                        state = parsed;
+                    }
+                }
+            } catch (e) {
+                console.error("Gagal memuat local storage:", e);
+            }
+
+            try {
+                if (typeof __firebase_config !== 'undefined') {
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    const app = initializeApp(firebaseConfig);
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    userId = auth.currentUser?.uid || crypto.randomUUID();
+
+                    const docRef = doc(db, 'artifacts', appId, 'config', 'tv_config_blue');
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        const cloudData = docSnap.data();
+                        if (cloudData && cloudData.state) {
+                            state = cloudData.state;
+                            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn("Cloud sync fallback to local storage:", err);
+            }
+
+            renderHeaderAndInfo();
+            renderAgenda();
+        }
+
+        async function saveStateToCloud() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                if (db) {
+                    const docRef = doc(db, 'artifacts', appId, 'config', 'tv_config_blue');
+                    await setDoc(docRef, { state: state, updatedAt: new Date().toISOString() });
+                }
+            } catch (e) {
+                console.error("Gagal menyimpan data:", e);
+            }
+        }
+
+        window.initDisplaySystem = function() {
+            const audioCheckbox = document.getElementById('startAudioToggle');
+            const fullscreenCheckbox = document.getElementById('startFullscreenToggle');
+
+            globalAudioEnabled = audioCheckbox ? audioCheckbox.checked : false;
+
+            if (fullscreenCheckbox && fullscreenCheckbox.checked) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                }
+            }
+
+            const startupModal = document.getElementById('startupOverlay');
+            if (startupModal) {
+                startupModal.style.opacity = '0';
+                setTimeout(() => startupModal.remove(), 400);
+            }
+
+            renderHeaderAndInfo();
+            renderAgenda();
+            renderMedia();
+            startAgendaAutoScroll();
+        };
+
+        function updateLiveClock() {
+            const now = new Date();
+            const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            
+            const dayName = days[now.getDay()];
+            const dateNum = now.getDate();
+            const monthName = months[now.getMonth()];
+            const yearNum = now.getFullYear();
+
+            const dateStr = `${dayName}, ${dateNum} ${monthName} ${yearNum}`;
+            const timeStr = now.toTimeString().split(' ')[0];
+
+            const dateEl = document.getElementById('liveDate');
+            const clockEl = document.getElementById('liveClock');
+
+            if (dateEl) dateEl.textContent = dateStr;
+            if (clockEl) clockEl.textContent = timeStr;
+        }
+
+        setInterval(updateLiveClock, 1000);
+        updateLiveClock();
+
+        function renderHeaderAndInfo() {
+            document.getElementById('headerSchoolName').textContent = state.school.name;
+            document.getElementById('headerSchoolAddress').textContent = state.school.address;
+            document.getElementById('headerLogo').src = state.school.logo;
+            document.getElementById('dailyTipText').textContent = state.school.dailyTip;
+            document.getElementById('marqueeText').textContent = state.marquee;
+        }
+
+        function renderAgenda() {
+            const container = document.getElementById('agendaList');
+            if (!container) return;
+
+            container.innerHTML = state.agendas.map(item => `
+                <div class="p-4 bg-sky-950/60 border border-sky-400/20 rounded-2xl flex items-center justify-between gap-3 shrink-0 shadow-lg hover:border-sky-400/50 transition">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-sky-500/20 to-blue-600/30 text-sky-300 font-bold text-xs flex items-center justify-center border border-sky-400/40 shrink-0 shadow-inner">
+                            <i class="fa-solid fa-calendar"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-extrabold text-white">${item.title}</h4>
+                            <p class="text-xs text-sky-300 font-semibold mt-0.5">${item.date}</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] px-3 py-1 rounded-full bg-sky-900/80 text-sky-200 font-bold border border-sky-400/30">${item.category}</span>
+                </div>
+            `).join('');
+        }
+
+        let agendaScrollInterval = null;
+        function startAgendaAutoScroll() {
+            const container = document.getElementById('agendaList');
+            if (!container) return;
+
+            if (agendaScrollInterval) clearInterval(agendaScrollInterval);
+
+            agendaScrollInterval = setInterval(() => {
+                if (container.scrollTop + container.clientHeight >= container.scrollHeight - 5) {
+                    container.scrollTop = 0;
+                } else {
+                    container.scrollTop += 1;
+                }
+            }, 60);
+        }
+
+        function renderMedia() {
+            if (!state.media || state.media.length === 0) return;
+            if (currentMediaIndex >= state.media.length) currentMediaIndex = 0;
+
+            const media = state.media[currentMediaIndex];
+            const viewer = document.getElementById('mediaViewer');
+            const categoryBadge = document.getElementById('mediaCategoryBadge');
+            const titleText = document.getElementById('mediaTitleText');
+            const timerEl = document.getElementById('mediaTimer');
+            const progressBar = document.getElementById('mediaProgressBar');
+
+            categoryBadge.textContent = media.category || 'Dokumentasi';
+            titleText.textContent = media.title || 'Kegiatan Sekolah';
+
+            if (mediaTimerInterval) clearInterval(mediaTimerInterval);
+            secondsElapsed = 0;
+
+            let totalDuration = parseInt(media.duration) || 10;
+
+            if (media.type === 'video') {
+                viewer.innerHTML = `
+                    <video id="activeVideoPlayer" class="w-full h-full object-contain bg-black" ${globalAudioEnabled ? '' : 'muted'} autoplay playsinline>
+                        <source src="${media.url}" type="video/mp4">
+                        Browser Anda tidak mendukung pemutaran video.
+                    </video>
+                `;
+
+                const vEl = document.getElementById('activeVideoPlayer');
+                if (vEl) {
+                    if (globalAudioEnabled) {
+                        vEl.muted = false;
+                        vEl.play().catch(() => {});
+                    }
+                    vEl.onended = function() {
+                        nextMedia();
+                    };
+                    vEl.onerror = function() {
+                        console.error("Gagal memuat video MP4, beralih otomatis dalam 5 detik.");
+                        setTimeout(nextMedia, 5000);
+                    };
+                }
+
+                mediaTimerInterval = setInterval(() => {
+                    secondsElapsed++;
+                    const percent = Math.min(100, (secondsElapsed / totalDuration) * 100);
+                    progressBar.style.width = `${percent}%`;
+                    timerEl.textContent = `${secondsElapsed}s / ${totalDuration}s`;
+
+                    if (secondsElapsed >= totalDuration) {
+                        clearInterval(mediaTimerInterval);
+                        nextMedia();
+                    }
+                }, 1000);
+
+            } else {
+                viewer.innerHTML = `
+                    <img src="${media.url}" class="w-full h-full object-cover animate-fade" alt="${media.title}" onerror="this.src='https://pngup.com/EnhF/SMP IT TRI SUKSES (400px).png'">
+                `;
+
+                mediaTimerInterval = setInterval(() => {
+                    secondsElapsed++;
+                    const percent = Math.min(100, (secondsElapsed / totalDuration) * 100);
+                    progressBar.style.width = `${percent}%`;
+                    timerEl.textContent = `${secondsElapsed}s / ${totalDuration}s`;
+
+                    if (secondsElapsed >= totalDuration) {
+                        clearInterval(mediaTimerInterval);
+                        nextMedia();
+                    }
+                }, 1000);
+            }
+        }
+
+        function nextMedia() {
+            if (mediaTimerInterval) clearInterval(mediaTimerInterval);
+            currentMediaIndex = (currentMediaIndex + 1) % state.media.length;
+            renderMedia();
+        }
+
+        window.openSettingsModal = function() {
+            document.getElementById('inputSchoolName').value = state.school.name;
+            document.getElementById('inputSchoolAddress').value = state.school.address;
+            document.getElementById('inputSchoolLogo').value = state.school.logo;
+            document.getElementById('inputDailyTip').value = state.school.dailyTip;
+            document.getElementById('inputMarquee').value = state.marquee;
+
+            renderAgendaEditor();
+            renderMediaEditor();
+
+            document.getElementById('settingsModal').classList.remove('hidden');
+        };
+
+        window.closeSettingsModal = function() {
+            document.getElementById('settingsModal').classList.add('hidden');
+        };
+
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('[id^="btnTab"]').forEach(el => {
+                el.classList.remove('text-sky-400', 'border-sky-400');
+                el.classList.add('text-slate-400', 'border-transparent');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400', 'border-transparent');
+                activeBtn.classList.add('text-sky-400', 'border-sky-400');
+            }
+        };
+
+        function renderAgendaEditor() {
+            const container = document.getElementById('agendaEditContainer');
+            container.innerHTML = state.agendas.map((item, index) => `
+                <div class="bg-sky-950 p-4 rounded-2xl border border-sky-400/20 space-y-3 shadow-md">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-sky-300">Agenda #${index + 1}</span>
+                        <button onclick="removeAgendaItem(${index})" class="text-rose-400 hover:text-rose-300 text-xs font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-trash"></i> Hapus
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <input type="text" value="${item.date}" id="agendaDate_${index}" placeholder="Tanggal" class="bg-slate-950 border border-sky-400/30 rounded-xl px-3 py-2 text-white text-xs">
+                        <input type="text" value="${item.title}" id="agendaTitle_${index}" placeholder="Judul Kegiatan" class="bg-slate-950 border border-sky-400/30 rounded-xl px-3 py-2 text-white text-xs md:col-span-2">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.addAgendaItem = function() {
+            state.agendas.push({ date: "01 Nov 2026", title: "Agenda Baru Sekolah", category: "Umum" });
+            renderAgendaEditor();
+        };
+
+        window.removeAgendaItem = function(index) {
+            state.agendas.splice(index, 1);
+            renderAgendaEditor();
+        };
+
+        function renderMediaEditor() {
+            const container = document.getElementById('mediaEditContainer');
+            container.innerHTML = state.media.map((item, index) => `
+                <div class="bg-sky-950 p-4 rounded-2xl border border-sky-400/20 space-y-3 shadow-md">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-sky-300">Slide Media #${index + 1}</span>
+                        <button onclick="removeMediaItem(${index})" class="text-rose-400 hover:text-rose-300 text-xs font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-trash"></i> Hapus
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <div>
+                            <label class="block text-[10px] text-sky-300 uppercase font-bold mb-1">Tipe</label>
+                            <select id="mediaType_${index}" class="w-full bg-slate-950 border border-sky-400/30 rounded-xl px-3 py-2 text-white text-xs">
+                                <option value="image" ${item.type === 'image' ? 'selected' : ''}>Foto / Gambar</option>
+                                <option value="video" ${item.type === 'video' ? 'selected' : ''}>Video (MP4)</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-3">
+                            <label class="block text-[10px] text-sky-300 uppercase font-bold mb-1">Judul Slide</label>
+                            <input type="text" value="${item.title}" id="mediaTitle_${index}" class="w-full bg-slate-950 border border-sky-400/30 rounded-xl px-3 py-2 text-white text-xs">
+                        </div>
+                        <div class="md:col-span-3">
+                            <label class="block text-[10px] text-sky-300 uppercase font-bold mb-1">URL Sumber (Link File / Gambar / MP4)</label>
+                            <input type="text" value="${item.url}" id="mediaUrl_${index}" class="w-full bg-slate-950 border border-sky-400/30 rounded-xl px-3 py-2 text-white text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-sky-300 uppercase font-bold mb-1">Durasi (Detik)</label>
+                            <input type="number" value="${item.duration || 10}" id="mediaDuration_${index}" class="w-full bg-slate-950 border border-sky-400/30 rounded-xl px-3 py-2 text-white text-xs">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.addMediaItem = function() {
+            state.media.push({ type: "image", url: "https://placehold.co/1280x720/0284c7/ffffff?text=Baru", title: "Dokumentasi Baru", category: "Umum", duration: 10 });
+            renderMediaEditor();
+        };
+
+        window.removeMediaItem = function(index) {
+            state.media.splice(index, 1);
+            renderMediaEditor();
+        };
+
+        window.saveSettings = async function() {
+            state.school.name = document.getElementById('inputSchoolName').value;
+            state.school.address = document.getElementById('inputSchoolAddress').value;
+            state.school.logo = document.getElementById('inputSchoolLogo').value;
+            state.school.dailyTip = document.getElementById('inputDailyTip').value;
+            state.marquee = document.getElementById('inputMarquee').value;
+
+            state.agendas = state.agendas.map((_, index) => ({
+                date: document.getElementById(`agendaDate_${index}`).value,
+                title: document.getElementById(`agendaTitle_${index}`).value,
+                category: "Kegiatan"
+            }));
+
+            state.media = state.media.map((_, index) => ({
+                type: document.getElementById(`mediaType_${index}`).value,
+                title: document.getElementById(`mediaTitle_${index}`).value,
+                url: document.getElementById(`mediaUrl_${index}`).value,
+                category: document.getElementById(`mediaType_${index}`).value === 'video' ? 'Video Profil' : 'Dokumentasi',
+                duration: parseInt(document.getElementById(`mediaDuration_${index}`).value) || 10
+            }));
+
+            await saveStateToCloud();
+            renderHeaderAndInfo();
+            renderAgenda();
+            currentMediaIndex = 0;
+            renderMedia();
+            closeSettingsModal();
+        };
+
+        window.exportJSON = function() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `tv_display_blue_config_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        };
+
+        window.importJSON = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const parsedData = JSON.parse(e.target.result);
+                    if (parsedData && parsedData.school && parsedData.agendas && parsedData.media) {
+                        state = parsedData;
+                        await saveStateToCloud();
+                        
+                        renderHeaderAndInfo();
+                        renderAgenda();
+                        currentMediaIndex = 0;
+                        renderMedia();
+                        openSettingsModal();
+                    } else {
+                        console.error("Format file JSON tidak sesuai.");
+                    }
+                } catch (err) {
+                    console.error("Gagal membaca file JSON:", err);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        };
+
+        initFirebaseAndLoad();
+    </script>
+</body>
+</html>

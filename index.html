@@ -64,9 +64,8 @@
             <div class="absolute -top-24 -right-24 w-48 h-48 bg-sky-400/30 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-600/30 rounded-full blur-3xl pointer-events-none"></div>
             
-            <div class="w-40 h-40 bg-tranparant from-sky-400 via-blue-600 to-indigo-600 text-white rounded-2xl mx-auto flex items-center justify-center text-3xl">
-                <img id="headerLogo" src="https://pngup.com/EnhF/SMP IT TRI SUKSES (400px).png" alt="Logo Sekolah" class="w-40 h-40 object-contain" onerror="this.src=''">
-            </div>
+            <img src="https://pngup.com/EnhF/SMP%20IT%20TRI%20SUKSES%20(400px).png" alt="Icon" class="w-40 h-40 bg-tranparant from-sky-400 via-blue-600 to-indigo-600 text-white rounded-2xl mx-auto flex items-center justify-center text-3xl">
+
             <div>
                 <h1 class="text-2xl font-black text-white mb-1 tracking-tight">TV Display Informasi Sekolah</h1>
                 <h1 id="headerSchoolName" class="text-xl md:text-xl font-black tracking-tight text-white bg-gradient-to-r from-sky-300 via-blue-200 to-cyan-300 bg-clip-text text-transparent">SMP ISLAM TERPADU TRI SUKSES</h1>
@@ -90,7 +89,7 @@
 
     <header class="glass-panel border-b border-sky-400/25 px-6 py-4 flex items-center justify-between shrink-0 z-20 shadow-xl">
         <div class="flex items-center gap-4">
-            <img id="headerLogo" src="https://pngup.com/EnhF/SMP IT TRI SUKSES (400px).png" alt="Logo Sekolah" class="w-20 h-20 object-contain" onerror="this.src=''">
+            <img id="headerLogo" src="https://pngup.com/EnhF/SMP%20IT%20TRI%20SUKSES%20(400px).png" alt="Logo Sekolah" class="w-20 h-20 object-contain" onerror="this.src=''">
             <div>
                 <h1 id="headerSchoolName" class="text-xl md:text-2xl font-black tracking-tight text-white bg-gradient-to-r from-sky-300 via-blue-200 to-cyan-300 bg-clip-text text-transparent">SMP ISLAM TERPADU TRI SUKSES</h1>
                 <p id="headerSchoolAddress" class="text-xs md:text-xl text-white font-semibold">Jalan Raya Kalimulya No.36 Kel.Kalimulya Kec.Cilodong Kota Depok</p>
@@ -265,14 +264,15 @@
             school: {
                 name: "SMP ISLAM TERPADU TRI SUKSES",
                 address: "Jalan Raya Kalimulya No.36 Kel.Kalimulya Kec.Cilodong Kota Depok",
-                logo: "https://pngup.com/EnhF/SMP IT TRI SUKSES (400px).png",
+                logo: "https://pngup.com/EnhF/SMP%20IT%20TRI%20SUKSES%20(400px).png",
                 dailyTip: "Budayakan 5S (Senyum, Sapa, Salam, Sopan, Santun) di lingkungan sekolah."
             },
             agendas: [
-                { date: "05 Okt 2026", title: "Upacara Hari Senin & Penyematan Atribut", category: "Upacara" },
-                { date: "12 Okt 2026", title: "Ujian Tengah Semester (UTS) Ganjil Dimulai", category: "Akademik" },
-                { date: "20 Okt 2026", title: "Pelatihan Literasi Digital Siswa", category: "Workshop" },
-                { date: "28 Okt 2026", title: "Peringatan Hari Sumpah Pemuda", category: "Nasional" }
+                { date: "3 Oktober 2026", title: "Laporan MID Semester 1", category: "Sumatif" },
+                { date: "5-16 Oktober 2026", title: "Supervisi Guru", category: "Kepala Sekolah" },
+                { date: "16-18 Oktober 2026", title: "Jota Joti Volunteer Pramuka", category: "Pramuka" },
+                { date: "24 Oktober 2026", title: "SKK Juru Masak", category: "Pramuka" },
+                { date: "28 Oktober 2026", title: "Gebyar Bulan Bahasa", category: "Kesiswaan" }
             ],
             media: [
                 {
@@ -291,7 +291,7 @@
                 },
                 {
                     type: "image",
-                    url: "https://www.pasteboard.co/C22UlZ1vGAmI.jpg",
+                    url: "https://gcdnb.pbrd.co/images/C22UlZ1vGAmI.jpg",
                     title: "Hari Pramuka Ke-65 Tahun 2026",
                     category: "Dokumentasi Pramuka",
                     duration: 10
@@ -514,7 +514,7 @@
 
             } else {
                 viewer.innerHTML = `
-                    <img src="${media.url}" class="w-full h-full object-cover animate-fade" alt="${media.title}" onerror="this.src='https://pngup.com/EnhF/SMP IT TRI SUKSES (400px).png'">
+                    <img src="${media.url}" class="w-full h-full object-cover animate-fade" alt="${media.title}" onerror="this.src='https://pngup.com/EnhF/SMP%20IT%20TRI%20SUKSES%20(400px).png'">
                 `;
 
                 mediaTimerInterval = setInterval(() => {
